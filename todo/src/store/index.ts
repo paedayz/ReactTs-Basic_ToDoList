@@ -1,6 +1,11 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 
 import { todoReducer } from "./todo/reducers";
+
+const initialState = {};
+const middleware = [thunk];
 
 const rootReducer = combineReducers({
   todoReducer,
@@ -8,8 +13,10 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-export default function configureStore() {
-  const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
+);
 
-  return store;
-}
+export default store;
